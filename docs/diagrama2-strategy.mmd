@@ -1,11 +1,17 @@
 classDiagram
-    %% Diagrama 2 - Strategy e integracao (versao inicial)
+    %% Diagrama 2 - Strategy e integracao (versao final, ajustada ao codigo)
 
     class Pedido {
+        <<imutavel>>
         -id : int
         -pesoKg : double
         -distanciaKm : double
         -valorItens : double
+        +Pedido(id, pesoKg, distanciaKm, valorItens)
+        +getId() int
+        +getPesoKg() double
+        +getDistanciaKm() double
+        +getValorItens() double
     }
 
     class FreteStrategy {
@@ -14,13 +20,31 @@ classDiagram
         +calcular(pedido : Pedido) double
     }
 
-    class FretePac
-    class FreteSedex
-    class RetiradaNaLoja
+    class FretePac {
+        +getNome() String
+        +calcular(pedido : Pedido) double
+    }
+    class FreteSedex {
+        +getNome() String
+        +calcular(pedido : Pedido) double
+    }
+    class RetiradaNaLoja {
+        +getNome() String
+        +calcular(pedido : Pedido) double
+    }
+    class FreteGratisAcima {
+        -VALOR_MINIMO : double = 300.00$
+        -estrategiaBase : FreteStrategy
+        +FreteGratisAcima(estrategiaBase : FreteStrategy)
+        +getNome() String
+        +calcular(pedido : Pedido) double
+    }
 
     class CalculadoraDeFrete {
         -estrategia : FreteStrategy
-        +setEstrategia(e : FreteStrategy)
+        +CalculadoraDeFrete()
+        +CalculadoraDeFrete(estrategia : FreteStrategy)
+        +setEstrategia(estrategia : FreteStrategy) void
         +calcular(pedido : Pedido) double
     }
 
@@ -34,9 +58,16 @@ classDiagram
     FreteStrategy <|.. FretePac
     FreteStrategy <|.. FreteSedex
     FreteStrategy <|.. RetiradaNaLoja
+    FreteStrategy <|.. FreteGratisAcima
 
-    CalculadoraDeFrete --> FreteStrategy : estrategia
-    CalculadoraDeFrete ..> AuditLog : registra
+    CalculadoraDeFrete --> "0..1" FreteStrategy : estrategia
+    FreteGratisAcima --> "1" FreteStrategy : estrategiaBase
+
+    CalculadoraDeFrete ..> AuditLog : registrar()
+    CalculadoraDeFrete ..> Pedido : usa
+    FreteStrategy ..> Pedido : usa
     FretePac ..> ConfiguracaoLoja : le tarifas
     FreteSedex ..> ConfiguracaoLoja : le tarifas
-    FreteStrategy ..> Pedido
+
+    note for FreteGratisAcima "Desafio extra: padrao Decorator.<br>Envolve outra FreteStrategy e devolve 0<br>quando valorItens >= R$ 300,00."
+    note for CalculadoraDeFrete "Contexto do Strategy: sem if/switch sobre o tipo.<br>Sem estrategia -> IllegalStateException."

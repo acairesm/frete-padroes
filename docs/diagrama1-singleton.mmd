@@ -1,8 +1,13 @@
 classDiagram
-    %% Diagrama 1 - Singleton (versao inicial)
+    %% Diagrama 1 - Singleton (versao final, ajustada ao codigo)
 
     class ConfiguracaoLoja {
-        -instancia$ ConfiguracaoLoja
+        <<singleton>>
+        -PADRAO_PAC_POR_KG : double = 2.50$
+        -PADRAO_PAC_POR_KM : double = 0.05$
+        -PADRAO_SEDEX_POR_KG : double = 4.00$
+        -PADRAO_SEDEX_POR_KM : double = 0.12$
+        -PADRAO_TAXA_URGENCIA_SEDEX : double = 15.00$
         -tarifaPacPorKg : double
         -tarifaPacPorKm : double
         -tarifaSedexPorKg : double
@@ -11,19 +16,36 @@ classDiagram
         -ConfiguracaoLoja()
         +getInstance()$ ConfiguracaoLoja
         +getTarifaPacPorKg() double
-        +setTarifaPacPorKg(valor : double)
-        +restaurarPadroes()
+        +getTarifaPacPorKm() double
+        +getTarifaSedexPorKg() double
+        +getTarifaSedexPorKm() double
+        +getTaxaUrgenciaSedex() double
+        +setTarifaPacPorKg(valor : double) void
+        +setTarifaPacPorKm(valor : double) void
+        +setTarifaSedexPorKg(valor : double) void
+        +setTarifaSedexPorKm(valor : double) void
+        +setTaxaUrgenciaSedex(valor : double) void
+        +restaurarPadroes() void
+    }
+
+    class Holder {
+        <<static nested class>>
+        -INSTANCIA : ConfiguracaoLoja$
     }
 
     class AuditLog {
-        -instancia$ AuditLog
+        <<singleton>>
+        -instancia : AuditLog$
         -registros : List~String~
         -AuditLog()
         +getInstance()$ AuditLog
-        +registrar(mensagem : String)
+        +registrar(mensagem : String) void
         +getRegistros() List~String~
-        +limpar()
+        +limpar() void
     }
 
-    note for ConfiguracaoLoja "Criacao segura: initialization-on-demand holder"
-    note for AuditLog "Criacao segura: double-checked locking com volatile"
+    ConfiguracaoLoja *-- Holder : classe aninhada
+    Holder --> ConfiguracaoLoja : INSTANCIA (static final)
+
+    note for ConfiguracaoLoja "Criacao segura: initialization-on-demand holder.<br>A JVM so carrega Holder na 1a chamada de getInstance()<br>e o carregamento de classe e thread-safe."
+    note for AuditLog "Criacao segura: double-checked locking<br>com o atributo instancia volatile.<br>registrar/getRegistros/limpar sao synchronized.<br>getRegistros() devolve List.copyOf (imutavel, na ordem)."
