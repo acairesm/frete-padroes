@@ -1,0 +1,42 @@
+classDiagram
+    %% Diagrama 2 - Strategy e integracao (versao inicial)
+
+    class Pedido {
+        -id : int
+        -pesoKg : double
+        -distanciaKm : double
+        -valorItens : double
+    }
+
+    class FreteStrategy {
+        <<interface>>
+        +getNome() String
+        +calcular(pedido : Pedido) double
+    }
+
+    class FretePac
+    class FreteSedex
+    class RetiradaNaLoja
+
+    class CalculadoraDeFrete {
+        -estrategia : FreteStrategy
+        +setEstrategia(e : FreteStrategy)
+        +calcular(pedido : Pedido) double
+    }
+
+    class ConfiguracaoLoja {
+        <<singleton>>
+    }
+    class AuditLog {
+        <<singleton>>
+    }
+
+    FreteStrategy <|.. FretePac
+    FreteStrategy <|.. FreteSedex
+    FreteStrategy <|.. RetiradaNaLoja
+
+    CalculadoraDeFrete --> FreteStrategy : estrategia
+    CalculadoraDeFrete ..> AuditLog : registra
+    FretePac ..> ConfiguracaoLoja : le tarifas
+    FreteSedex ..> ConfiguracaoLoja : le tarifas
+    FreteStrategy ..> Pedido

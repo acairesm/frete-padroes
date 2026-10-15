@@ -1,0 +1,29 @@
+classDiagram
+    %% Diagrama 1 - Singleton (versao inicial)
+
+    class ConfiguracaoLoja {
+        -instancia$ ConfiguracaoLoja
+        -tarifaPacPorKg : double
+        -tarifaPacPorKm : double
+        -tarifaSedexPorKg : double
+        -tarifaSedexPorKm : double
+        -taxaUrgenciaSedex : double
+        -ConfiguracaoLoja()
+        +getInstance()$ ConfiguracaoLoja
+        +getTarifaPacPorKg() double
+        +setTarifaPacPorKg(valor : double)
+        +restaurarPadroes()
+    }
+
+    class AuditLog {
+        -instancia$ AuditLog
+        -registros : List~String~
+        -AuditLog()
+        +getInstance()$ AuditLog
+        +registrar(mensagem : String)
+        +getRegistros() List~String~
+        +limpar()
+    }
+
+    note for ConfiguracaoLoja "Criacao segura: initialization-on-demand holder"
+    note for AuditLog "Criacao segura: double-checked locking com volatile"
