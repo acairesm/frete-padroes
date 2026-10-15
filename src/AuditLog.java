@@ -1,11 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Singleton com o histórico de auditoria dos cálculos.
- * Criação segura: double-checked locking com volatile.
- * Gravações simultâneas: os métodos que mexem na lista são synchronized.
- */
 public final class AuditLog {
 
     private static volatile AuditLog instancia;

@@ -1,7 +1,3 @@
-/**
- * Desafio extra: frete grátis para pedidos a partir de R$ 300,00.
- * Envolve outra estratégia e só muda o resultado dela (padrão Decorator).
- */
 public class FreteGratisAcima implements FreteStrategy {
 
     private static final double VALOR_MINIMO = 300.00;

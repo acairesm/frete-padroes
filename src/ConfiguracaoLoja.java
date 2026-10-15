@@ -1,8 +1,3 @@
-/**
- * Singleton com as tarifas da loja.
- * Criação segura: initialization-on-demand holder (a JVM só carrega o Holder
- * na primeira chamada de getInstance(), e o carregamento de classe é thread-safe).
- */
 public final class ConfiguracaoLoja {
 
     private static final double PADRAO_PAC_POR_KG = 2.50;

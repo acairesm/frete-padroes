@@ -1,4 +1,3 @@
-/** Pedido imutável: classe final, atributos final e sem setters. */
 public final class Pedido {
 
     private final int id;

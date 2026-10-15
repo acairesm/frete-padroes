@@ -1,9 +1,5 @@
 import java.util.Locale;
 
-/**
- * Contexto do Strategy. Não conhece nenhuma modalidade concreta:
- * só delega para a FreteStrategy atual (sem if/switch sobre o tipo de frete).
- */
 public class CalculadoraDeFrete {
 
     private FreteStrategy estrategia;
